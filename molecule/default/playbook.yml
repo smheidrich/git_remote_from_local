@@ -13,6 +13,8 @@
         mkdir ~/test_repo
         cd ~/test_repo
         git init
+        git config user.name 'testuser'
+        git config user.email 'testuser@example.net'
         echo "hello world" > some_file
         git add some_file
         git commit -a -m "Initial"
