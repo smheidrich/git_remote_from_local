@@ -13,7 +13,7 @@ platforms:
       - name: testnet
   - name: instance2
     hostname: instance2
-    image: samueldebruyn/debian-git
+    image: smheidrich/debian-git-sshd
     networks:
       - name: testnet
 provisioner:

@@ -1,4 +1,35 @@
 ---
+- name: Locally generate SSH key that will be used for testing
+  hosts: localhost
+  tasks:
+    - tempfile:
+        state: directory
+      register: tmp_ssh_key
+    - shell: >
+        cat /dev/zero |
+        ssh-keygen -q -N "" -f {{ tmp_ssh_key.path | quote }}/id_rsa
+- name: Copy generated SSH key to ~/.ssh on instance1
+  hosts: instance1
+  tasks:
+    - file:
+        path: '~/.ssh/'
+        state: directory
+    - copy:
+        src: "{{ hostvars['localhost']['tmp_ssh_key'].path | quote }}/id_rsa"
+        dest: "~/.ssh/id_rsa"
+    - copy:
+        src: "{{ hostvars['localhost']['tmp_ssh_key'].path | quote }}/id_rsa"
+        dest: "~/.ssh/id_rsa.pub"
+- name: Make SSH key authorized on instance2 and start sshd
+  hosts: instance2
+  tasks:
+    - authorized_key:
+        user: '{{ ansible_user_id }}'
+        state: present
+        key: "{{ lookup('file', hostvars['localhost']['tmp_ssh_key'].path) }}"
+    - service:
+        name: sshd
+        state: started
 - name: Set up simulated source git repo on instance1
   hosts: instance1
   tasks:
