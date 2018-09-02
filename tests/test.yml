@@ -1,0 +1,6 @@
+---
+- hosts: localhost
+  roles:
+    - role: git_remote_from_local
+      vars:
+        dest_directory: /tmp/testrepo

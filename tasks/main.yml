@@ -1,0 +1,61 @@
+---
+# tasks file for git_remote_from_local
+- name: make sure directory in which git repo will reside exists
+  file:
+    path: '{{ dest | mandatory }}'
+    state: directory
+- name: check if directory is already a git repo
+  command: git rev-parse
+  args:
+    chdir: '{{ dest | mandatory }}'
+  register: rev_parse
+  failed_when: >
+    rev_parse is failed
+    and
+    "fatal: Not a git repository" not in rev_parse.stderr
+- name: initialize empty, bare git repo on the remote host
+  when: rev_parse.rc != 0 or reinitialize
+  command: git init --bare
+  args:
+    chdir: '{{ dest | mandatory }}'
+- name: set up git remote in local repository to push to the remote repository
+  when: 'src != None'
+  delegate_to: 127.0.0.1
+  become: no
+  block:
+    - name: check if local repo already has a git remote for the remote repo
+      command: 'git remote get-url --push {{ remote_name }}'
+      args:
+        chdir: '{{ src }}'
+      register: remote_url_results
+      failed_when: >
+        remote_url_results is failed
+        and
+        "fatal: No such remote" not in remote_url_results.stderr
+    - name: add new git remote to local repository
+      when: remote_url_results.rc != 0
+      command: >
+        git remote add {{ remote_name }} {{ remote_url }}
+      args:
+        chdir: '{{ src }}'
+    - name: set URL of existing git remote to point to remote repository
+      when: remote_url_results.rc == 0 and override_existing_remote
+      command: >
+        git remote set-url {{ remote_name }} {{ remote_url_results }}
+      args:
+        chdir: '{{ src }}'
+    - fail:
+        msg: >
+          found existing git remote named {{ remote_name }} in {{ src }} which
+          points to {{ remote_url_results.stdout.strip() }} instead of
+          {{ remote_url }}; diagnose and fix the situation (recommended) or run
+          with override_existing_remote in the future to overwrite it
+      when: >
+        remote_url_results.rc == 0 and
+        remote_url_results.stdout.strip() != remote_url
+        and not override_existing_remote
+    - name: push from local to remote repo
+      when: push
+      command: 'git push {{ remote_name }} master'
+      args:
+        chdir: '{{ src }}'
