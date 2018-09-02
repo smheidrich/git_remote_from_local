@@ -2,4 +2,4 @@
 - name: Converge
   hosts: all
   roles:
-    - role: .
+    - role: git_remote_from_local
