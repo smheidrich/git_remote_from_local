@@ -18,7 +18,8 @@ repository if it doesn't exist already.
 Requirements
 ------------
 
-Assumes that *git* is installed and accessible on the remote host.
+Assumes that *git* (version >= 2.x) is installed and accessible on the remote
+and local hosts.
 
 Role Variables
 --------------
