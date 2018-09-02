@@ -50,6 +50,7 @@
           points to {{ remote_url_results.stdout.strip() }} instead of
           {{ remote_url }}; diagnose and fix the situation (recommended) or run
           with override_existing_remote in the future to overwrite it
+      name: "fail if existing git remote doesn't match ours at the end"
       when: >
         remote_url_results.rc == 0 and
         remote_url_results.stdout.strip() != remote_url
