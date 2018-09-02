@@ -8,10 +8,10 @@ lint:
 platforms:
   - name: instance1
     hostname: instance1
-    image: centos:7
+    image: samueldebruyn/debian-git
   - name: instance2
     hostname: instance2
-    image: centos:7
+    image: samueldebruyn/debian-git
 provisioner:
   name: ansible
   lint:

@@ -1,11 +1,4 @@
 ---
-- name: "Install git (TODO: this should probably go somewhere else)"
-  hosts: all
-  become: true
-  tasks:
-    - yum:
-        name: git
-        state: installed
 - name: Set up simulated source git repo on instance1
   hosts: instance1
   tasks:
