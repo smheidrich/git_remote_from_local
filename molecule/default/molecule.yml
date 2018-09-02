@@ -9,9 +9,13 @@ platforms:
   - name: instance1
     hostname: instance1
     image: samueldebruyn/debian-git
+    networks:
+      - name: testnet
   - name: instance2
     hostname: instance2
     image: samueldebruyn/debian-git
+    networks:
+      - name: testnet
 provisioner:
   name: ansible
   lint:
