@@ -58,16 +58,18 @@ Role Variables
 Example Playbook
 ----------------
 
-    - hosts: example.net
-      become: yes
-      become_user: remote_user
-      roles:
-        - role: git_remote_from_local
-          vars:
-            dest: /home/remote_user/testing/my_repo
-            src: ~/my_repo
-            remote_name: example_testing
-            push: yes
+```yaml
+- hosts: example.net
+  become: yes
+  become_user: remote_user
+  roles:
+    - role: git_remote_from_local
+      vars:
+        dest: /home/remote_user/testing/my_repo
+        src: ~/my_repo
+        remote_name: example_testing
+        push: yes
+```
 
 
 License
