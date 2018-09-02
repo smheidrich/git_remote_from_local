@@ -26,7 +26,13 @@
     - authorized_key:
         user: '{{ ansible_user_id }}'
         state: present
-        key: "{{ lookup('file', hostvars['localhost']['tmp_ssh_key'].path) }}"
+        key: >
+          {{
+            lookup(
+              'file',
+              hostvars['localhost']['tmp_ssh_key'].path+'/id_rsa.pub'
+            )
+          }}
     - service:
         name: sshd
         state: started
