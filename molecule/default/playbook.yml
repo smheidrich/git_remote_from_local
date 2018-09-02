@@ -25,6 +25,6 @@
   roles:
     - role: git_remote_from_local
       vars:
-        src: "{{ repo_tmp.path }}"
+        src: '{{ hostvars["localhost"]["repo_tmp"].path }}'
         dest: /tmp/test_repo  # TODO ???
         push: yes
