@@ -1,3 +1,10 @@
+-----
+
+**Not ready for actual use yet , I just put it on here to see if I can get
+automated tests via Travis to work...**
+
+-----
+
 git_remote_from_local
 =====================
 
