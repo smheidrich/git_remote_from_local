@@ -17,6 +17,8 @@ provisioner:
   lint:
     name: ansible-lint
     options:
+      exclude:
+        - molecule/default/playbook.yml
       x: ["ANSIBLE0006", "ANSIBLE0012"]
 scenario:
   name: default
