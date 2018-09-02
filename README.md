@@ -12,10 +12,8 @@ git_remote_from_local
 
 Initialize remote git repository for pushing from local repository.
 
-Also sets up a [*git remote*][git-remote] on the local repository to point to
-the remote repository if it doesn't exist already.
-
-[git-remote]: https://git-scm.com/book/en/v2/Git-Basics-Working-with-Remotes
+Also sets up a *git remote* on the local repository to point to the remote
+repository if it doesn't exist already.
 
 Requirements
 ------------
