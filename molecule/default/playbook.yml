@@ -6,12 +6,14 @@
     - yum:
         name: git
         state: installed
-- name: Set up simulated source git repo on instance1
-  hosts: instance1
+- name: Set up simulated source git repo on localhost
+  hosts: localhost
   tasks:
+    - tempfile:
+        state: directory
+      register: repo_tmp
     - shell: |
-        mkdir ~/test_repo
-        cd ~/test_repo
+        cd {{ repo_tmp.path | quote }}
         git init
         git config user.name 'testuser'
         git config user.email 'testuser@example.net'
@@ -23,6 +25,6 @@
   roles:
     - role: git_remote_from_local
       vars:
-        src: ~/test_repo
+        src: "{{ repo_tmp.path }}"
         dest: /tmp/test_repo  # TODO ???
         push: yes
