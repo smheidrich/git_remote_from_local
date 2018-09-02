@@ -8,6 +8,8 @@ automated tests via Travis to work...**
 git_remote_from_local
 =====================
 
+[![Build Status](https://travis-ci.org/smheidrich/git_remote_from_local.svg?branch=master)](https://travis-ci.org/smheidrich/git_remote_from_local)
+
 Initialize remote git repository for pushing from local repository.
 
 Also sets up a [*git remote*][git-remote] on the local repository to point to
