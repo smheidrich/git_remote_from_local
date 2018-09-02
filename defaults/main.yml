@@ -6,3 +6,4 @@ remote_name: "{{ inventory_hostname_short }}"
 remote_url: "ssh://{{ ansible_user_id }}@{{ inventory_hostname }}{{ dest }}"
 override_existing_remote: no
 push: yes
+src_host: "127.0.0.1"

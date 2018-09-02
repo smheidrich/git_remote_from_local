@@ -26,3 +26,4 @@
         src: ~/test_repo
         dest: /tmp/test_repo  # TODO ???
         push: yes
+        src_host: instance1

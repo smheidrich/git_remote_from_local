@@ -20,7 +20,7 @@
     chdir: '{{ dest | mandatory }}'
 - name: set up git remote in local repository to push to the remote repository
   when: 'src != None'
-  delegate_to: 127.0.0.1
+  delegate_to: '{{ src_host }}'
   become: no
   block:
     - name: check if local repo already has a git remote for the remote repo
