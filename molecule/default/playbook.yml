@@ -1,5 +1,19 @@
 ---
-- name: Converge
-  hosts: all
+- name: Set up simulated source git repo on instance1
+  hosts: instance1
+  tasks:
+    - shell: |
+        mkdir ~/test_repo
+        cd ~/test_repo
+        git init
+        echo "hello world" > some_file
+        git add some_file
+        git commit -a -m "Initial"
+- name: Simple test of our role: push to instance2
+  hosts: instance2
   roles:
     - role: git_remote_from_local
+      vars:
+        src: ~/test_repo
+        dest: /tmp/test_repo # TODO ???
+        push: yes

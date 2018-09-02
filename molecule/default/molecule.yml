@@ -9,6 +9,9 @@ platforms:
   - name: instance1
     hostname: instance1
     image: centos:7
+  - name: instance2
+    hostname: instance2
+    image: centos:7
 provisioner:
   name: ansible
   lint:
