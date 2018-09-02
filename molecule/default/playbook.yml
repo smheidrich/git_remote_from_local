@@ -38,7 +38,7 @@
   become: yes
   tasks:
     - service:
-        name: sshd
+        name: ssh
         state: started
 - name: Set up simulated source git repo on instance1
   hosts: instance1
