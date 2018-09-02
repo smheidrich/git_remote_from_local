@@ -20,7 +20,7 @@
     - copy:
         src: "{{ hostvars['localhost']['tmp_ssh_key'].path | quote }}/id_rsa"
         dest: "~/.ssh/id_rsa.pub"
-- name: Make SSH key authorized on instance2 and start sshd
+- name: Make generated SSH key authorized on instance2
   hosts: instance2
   tasks:
     - authorized_key:
@@ -33,6 +33,10 @@
               hostvars['localhost']['tmp_ssh_key'].path+'/id_rsa.pub'
             )
           }}
+- name: Start sshd on instance2
+  hosts: instance2
+  become: yes
+  tasks:
     - service:
         name: sshd
         state: started
