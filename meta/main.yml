@@ -1,3 +1,4 @@
+---
 galaxy_info:
   author: smheidrich
   description: Initialize remote git repo for pushing from local repo
