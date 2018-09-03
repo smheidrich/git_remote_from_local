@@ -34,7 +34,7 @@
               hostvars['localhost']['tmp_ssh_key'].path+'/id_rsa.pub'
             )
           }}
-- name: Start sshd on instance2 (manually)
+- name: "Start sshd on instance2 manually because Ansible's thing doesn't work"
   hosts: instance2
   become: yes
   tasks:
@@ -51,24 +51,6 @@
         echo "hello world" > some_file
         git add some_file
         git commit -a -m "Initial"
-- name: "Debug: Check if we can ping instance2 from instance1"
-  hosts: instance1
-  tasks:
-    - apt:
-        name: iputils-ping
-        state: installed
-    - command: ping -c 1 instance1
-- name: "Debug: Show open ports and running processes on instance2"
-  hosts: instance2
-  tasks:
-    - apt:
-        name: net-tools
-        state: installed
-    - apt:
-        name: procps
-        state: installed
-    - command: netstat -tulpen
-    - command: ps -eo comm,pid
 - name: "Get instance2 host key"
   hosts: instance2
   tasks:
