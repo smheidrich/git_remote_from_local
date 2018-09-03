@@ -18,7 +18,7 @@
         src: "{{ hostvars['localhost']['tmp_ssh_key'].path | quote }}/id_rsa"
         dest: "~/.ssh/id_rsa"
     - copy:
-        src: "{{ hostvars['localhost']['tmp_ssh_key'].path | quote }}/id_rsa"
+        src: "{{ hostvars['localhost']['tmp_ssh_key'].path | quote }}/id_rsa.pub"
         dest: "~/.ssh/id_rsa.pub"
 - name: Make generated SSH key authorized on instance2
   hosts: instance2
