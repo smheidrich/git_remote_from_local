@@ -59,13 +59,17 @@
         name: iputils-ping
         state: installed
     - command: ping -c 1 instance1
-- name: "Debug: Show open ports on instance2"
+- name: "Debug: Show open ports and running processes on instance2"
   hosts: instance2
   tasks:
     - apt:
         name: net-tools
         state: installed
+    - apt:
+        name: procps
+        state: installed
     - command: netstat -tulpen
+    - command: ps -eo comm,pid
 - name: "Simple test of our role: push to instance2"
   hosts: instance2
   roles:
