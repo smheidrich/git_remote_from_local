@@ -52,6 +52,13 @@
         echo "hello world" > some_file
         git add some_file
         git commit -a -m "Initial"
+- name: "Debug: Check if we can ping instance2 from instance1"
+  hosts: instance1
+  tasks:
+    - apt:
+        name: iputils-ping
+        state: installed
+    - command: ping -c 1 instance1
 - name: "Simple test of our role: push to instance2"
   hosts: instance2
   roles:
