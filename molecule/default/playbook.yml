@@ -80,7 +80,9 @@
     - known_hosts:
         name: instance2
         state: present
-        key: '{{ hostvars["instance2"]["host_key"]["content"] | b64decode }}'
+        key: >
+          instance2
+          {{ hostvars["instance2"]["host_key"]["content"] | b64decode }}
 - name: "Simple test of our role: push to instance2"
   hosts: instance2
   roles:
