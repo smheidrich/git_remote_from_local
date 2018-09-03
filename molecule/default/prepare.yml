@@ -4,10 +4,10 @@
   tasks:
     - tempfile:
         state: directory
-      register: tmp_ssh_key
+      register: ssh_key
     - shell: >
         cat /dev/zero |
-        ssh-keygen -q -N "" -f {{ tmp_ssh_key.path | quote }}/id_rsa
+        ssh-keygen -q -N "" -f {{ ssh_key.path | quote }}/id_rsa
 - name: Copy generated SSH key to ~/.ssh on instance1
   hosts: instance1
   tasks:
@@ -15,11 +15,11 @@
         path: '~/.ssh/'
         state: directory
     - copy:
-        src: "{{ hostvars['localhost']['tmp_ssh_key'].path | quote }}/id_rsa"
+        src: "{{ hostvars['localhost']['ssh_key'].path | quote }}/id_rsa"
         dest: "~/.ssh/id_rsa"
         mode: "0600"
     - copy:
-        src: "{{ hostvars['localhost']['tmp_ssh_key'].path | quote }}/id_rsa.pub"
+        src: "{{ hostvars['localhost']['ssh_key'].path | quote }}/id_rsa.pub"
         dest: "~/.ssh/id_rsa.pub"
 - name: Make generated SSH key authorized on instance2
   hosts: instance2
@@ -31,7 +31,7 @@
           {{
             lookup(
               'file',
-              hostvars['localhost']['tmp_ssh_key'].path+'/id_rsa.pub'
+              hostvars['localhost']['ssh_key'].path+'/id_rsa.pub'
             )
           }}
 - name: "Start sshd on instance2 manually because Ansible's thing doesn't work"
