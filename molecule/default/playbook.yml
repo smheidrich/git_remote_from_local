@@ -33,13 +33,11 @@
               hostvars['localhost']['tmp_ssh_key'].path+'/id_rsa.pub'
             )
           }}
-- name: Start sshd on instance2
+- name: Start sshd on instance2 (manually)
   hosts: instance2
   become: yes
   tasks:
-    - service:
-        name: ssh
-        state: started
+    - command: /etc/init.d/ssh start
 - name: Set up simulated source git repo on instance1
   hosts: instance1
   tasks:
