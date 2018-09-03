@@ -68,6 +68,19 @@
         state: installed
     - command: netstat -tulpen
     - command: ps -eo comm,pid
+- name: "Get instance2 host key"
+  hosts: instance2
+  tasks:
+    - slurp:
+        src: /etc/ssh/ssh_host_ecdsa_key.pub
+      register: host_key
+- name: "Make instance2 host key known to instance1"
+  hosts: instance1
+  tasks:
+    - known_hosts:
+        name: instance2
+        state: present
+        key: '{{ hostvars["instance2"]["host_key"]["content"] | b64decode }}'
 - name: "Simple test of our role: push to instance2"
   hosts: instance2
   roles:
