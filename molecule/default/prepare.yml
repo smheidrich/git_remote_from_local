@@ -1,0 +1,86 @@
+---
+- name: Locally generate SSH key that will be used for testing
+  hosts: localhost
+  tasks:
+    - tempfile:
+        state: directory
+      register: tmp_ssh_key
+    - shell: >
+        cat /dev/zero |
+        ssh-keygen -q -N "" -f {{ tmp_ssh_key.path | quote }}/id_rsa
+- name: Copy generated SSH key to ~/.ssh on instance1
+  hosts: instance1
+  tasks:
+    - file:
+        path: '~/.ssh/'
+        state: directory
+    - copy:
+        src: "{{ hostvars['localhost']['tmp_ssh_key'].path | quote }}/id_rsa"
+        dest: "~/.ssh/id_rsa"
+        mode: "0600"
+    - copy:
+        src: "{{ hostvars['localhost']['tmp_ssh_key'].path | quote }}/id_rsa.pub"
+        dest: "~/.ssh/id_rsa.pub"
+- name: Make generated SSH key authorized on instance2
+  hosts: instance2
+  tasks:
+    - authorized_key:
+        user: '{{ ansible_user_id }}'
+        state: present
+        key: >
+          {{
+            lookup(
+              'file',
+              hostvars['localhost']['tmp_ssh_key'].path+'/id_rsa.pub'
+            )
+          }}
+- name: Start sshd on instance2 (manually)
+  hosts: instance2
+  become: yes
+  tasks:
+    - command: /etc/init.d/ssh start
+- name: Set up simulated source git repo on instance1
+  hosts: instance1
+  tasks:
+    - shell: |
+        mkdir ~/test_repo
+        cd ~/test_repo
+        git init
+        git config user.name 'testuser'
+        git config user.email 'testuser@example.net'
+        echo "hello world" > some_file
+        git add some_file
+        git commit -a -m "Initial"
+- name: "Debug: Check if we can ping instance2 from instance1"
+  hosts: instance1
+  tasks:
+    - apt:
+        name: iputils-ping
+        state: installed
+    - command: ping -c 1 instance1
+- name: "Debug: Show open ports and running processes on instance2"
+  hosts: instance2
+  tasks:
+    - apt:
+        name: net-tools
+        state: installed
+    - apt:
+        name: procps
+        state: installed
+    - command: netstat -tulpen
+    - command: ps -eo comm,pid
+- name: "Get instance2 host key"
+  hosts: instance2
+  tasks:
+    - slurp:
+        src: /etc/ssh/ssh_host_ecdsa_key.pub
+      register: host_key
+- name: "Make instance2 host key known to instance1"
+  hosts: instance1
+  tasks:
+    - known_hosts:
+        name: instance2
+        state: present
+        key: >
+          instance2
+          {{ hostvars["instance2"]["host_key"]["content"] | b64decode }}

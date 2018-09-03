@@ -18,6 +18,8 @@ platforms:
       - name: testnet
 provisioner:
   name: ansible
+  playbooks:
+    prepare: prepare.yml
   lint:
     name: ansible-lint
     options:
