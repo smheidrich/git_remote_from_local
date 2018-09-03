@@ -17,6 +17,7 @@
     - copy:
         src: "{{ hostvars['localhost']['tmp_ssh_key'].path | quote }}/id_rsa"
         dest: "~/.ssh/id_rsa"
+        mode: "0600"
     - copy:
         src: "{{ hostvars['localhost']['tmp_ssh_key'].path | quote }}/id_rsa.pub"
         dest: "~/.ssh/id_rsa.pub"
