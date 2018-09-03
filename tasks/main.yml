@@ -13,6 +13,7 @@
     rev_parse is failed
     and
     "fatal: Not a git repository" not in rev_parse.stderr
+  changed_when: false
 - name: initialize empty, bare git repo on the remote host
   when: rev_parse.rc != 0 or reinitialize
   command: git init --bare
@@ -32,6 +33,7 @@
         remote_url_results is failed
         and
         "fatal: No such remote" not in remote_url_results.stderr
+      changed_when: false
     - name: add new git remote to local repository
       when: remote_url_results.rc != 0
       command: >
@@ -60,3 +62,5 @@
       command: 'git push {{ remote_name }} master'
       args:
         chdir: '{{ src }}'
+      register: push_results
+      changed_when: '"Everything up-to-date" not in push_results.stderr'
