@@ -1,0 +1,16 @@
+# the aim of this is to mirror
+# https://molecule.readthedocs.io/en/latest/examples.html#docker
+# but use a proper Vagrant-provisioned VM instead of a Docker container with
+# access to the daemon...
+
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "bento/debian-9.5"
+
+  config.vm.synced_folder "..", "/git_remote_from_local", type: "rsync" # TODO
+
+  config.vm.provision :ansible do |ansible|
+    ansible.playbook = "travis_like_env_on_bento_deb95.yml"
+  end
+
+end

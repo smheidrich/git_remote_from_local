@@ -1,0 +1,69 @@
+---
+# The aim of this is to provide roughly (i.e. to the degree required by this
+# project) the same environment as that provided by Travis when given this
+# project's .travis.yml file.
+# Intended to be used as a provisioning playbook in Vagrant.
+#
+# TODO: most of this could be replaced by two roles from Galaxy which install
+# Docker and Ansible 2.6+, I guess...
+- hosts: all
+  become: yes
+  tasks:
+    - name: Upgrade everything to the latest version
+      apt:
+        upgrade: dist
+        update_cache: yes
+      ignore_errors: yes
+    - name: Install stuff required by Docker
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg2
+          - software-properties-common
+        state: latest
+    - name: Add key for Docker repo
+      apt_key:
+        url: https://download.docker.com/linux/debian/gpg
+        state: present
+    - name: Install Docker repo source  # TODO use proper module
+      shell: >
+        add-apt-repository
+        "deb [arch=amd64] https://download.docker.com/linux/debian
+        $(lsb_release -cs)
+        stable"
+    - name: Update cache
+      apt:
+        update_cache: yes
+      ignore_errors: yes
+    - name: Install Docker
+      apt:
+        name: docker-ce
+        state: latest
+    - name: Add key for Ansible repo
+      apt_key:
+        keyserver: keyserver.ubuntu.com
+        id: 93C4A3FD7BB9C367
+        state: present
+    - name: Install Ansible repo source
+      apt_repository:
+        repo: 'deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main'
+        state: present
+    - name: Update cache
+      apt:
+        update_cache: yes
+      ignore_errors: yes
+    - name: Install Ansible
+      apt:
+        name: ansible
+        state: latest
+    - name: Install pip  # TODO Py3 how?
+      apt:
+        name: python-pip
+        state: latest
+    - name: Install Molecule and required Docker bindings
+      pip:
+        name:
+          - molecule
+          - docker
